@@ -17,6 +17,7 @@ app.get('/', function (req, res) {
     })
     .then(data => {
         const tables = getTables(data)
+        res.setHeader('Access-Control-Allow-Origin', '*');
         res.send(tables);
     })
     .catch(console.error);
