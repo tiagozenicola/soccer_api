@@ -3,6 +3,7 @@ const app = express();
 const getTables = require('./util')
 const fetch = require('node-fetch');
 
+const PORT = process.env.PORT || 3001;
 
 app.get('/', function (req, res) {
   fetch('https://www.theguardian.com/football/tables')
@@ -24,6 +25,6 @@ app.get('/', function (req, res) {
   
 });
 
-app.listen(3001, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(PORT, function () {
+  console.log(`Example app listening on port ${PORT}!`);
 });
