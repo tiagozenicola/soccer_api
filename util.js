@@ -31,7 +31,6 @@ const getTeamsFromTable = table => {
 
     const columns = row.querySelectorAll('td')
 
-    console.log('***********************','columns', columns)
     teams.push({
       "position": parseInt(columns[0].text),
       "name": columns[1].text,
