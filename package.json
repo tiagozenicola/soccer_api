@@ -6,6 +6,8 @@
   "author": "Tiago Lopes Zenicola <tiagozenicola@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "node-fetch": "^2.3.0",
+    "node-html-parser": "^1.1.11"
   }
 }
