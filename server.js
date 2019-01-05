@@ -1,12 +1,33 @@
-const express = require('express');
-const app = express();
 const getTables = require('./util')
 const fetch = require('node-fetch');
+const express = require('express');
+const graphqlHTTP = require('express-graphql');
+const { buildSchema } = require('graphql');
 
-const PORT = process.env.PORT || 3001;
+const SERVER_PORT = process.env.PORT || 4000;
 
-app.get('/', function (req, res) {
-  fetch('https://www.theguardian.com/football/tables')
+const schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+const root = {
+  hello: () => {
+    return 'Hello world!';
+  },
+};
+
+const app = express();
+
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: false,
+}));
+
+app.get('/tables', function (req, res) {
+    fetch('https://www.theguardian.com/football/tables')
     .then(response => {
         if (!response.ok){
             const error_message = 'Error calling site'
@@ -22,9 +43,7 @@ app.get('/', function (req, res) {
         res.send(tables);
     })
     .catch(console.error);
+    
+});
   
-});
-
-app.listen(PORT, function () {
-  console.log(`Example app listening on port ${PORT}!`);
-});
+app.listen(SERVER_PORT, () => console.log(`Example app listening on port ${SERVER_PORT}!`));
