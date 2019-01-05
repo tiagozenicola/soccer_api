@@ -27,7 +27,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 app.get('/tables', function (req, res) {
-    fetch('https://www.theguardian.com/football/tables')
+  fetch('https://www.theguardian.com/football/tables')
     .then(response => {
         if (!response.ok){
             const error_message = 'Error calling site'
