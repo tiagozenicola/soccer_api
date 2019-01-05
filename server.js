@@ -1,3 +1,4 @@
+const cors = require('cors')
 const getTables = require('./util')
 const fetch = require('node-fetch');
 const express = require('express');
@@ -60,6 +61,7 @@ const loadSiteData = () => {
 
 const app = express();
 
+app.use(cors())
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
