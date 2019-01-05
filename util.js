@@ -33,7 +33,7 @@ const getTeamsFromTable = table => {
 
     teams.push({
       "position": parseInt(columns[0].text),
-      "name": columns[1].text,
+      "name": columns[1].text.trim(),
       "games_played": parseInt(columns[2].text),
       "win": parseInt(columns[3].text),
       "drawn": parseInt(columns[4].text),
