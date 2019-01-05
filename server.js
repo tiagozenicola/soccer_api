@@ -11,13 +11,34 @@ const SERVER_PORT = process.env.PORT || 4000;
 
 const schema = buildSchema(`
   type Query {
-    hello: String
+    tables: Tables!
+  }
+  type Tables {
+    england: [Team!]
+    spain: [Team!]
+    italy: [Team!]
+    germany: [Team!]
+    france: [Team!]
+  }
+  type Team {
+    position: Int!
+    name: String!
+    games_played: Int!
+    win: Int!
+    drawn: Int!
+    lost: Int!
+    goals_for: Int!
+    goals_against: Int!
+    goal_difference: Int!
+    points: Int!
+    history: [Int!]
+    percent: Float!
   }
 `);
 
 const root = {
-  hello: () => {
-    return 'Hello world!';
+  tables: () => {
+    return data.tables;
   },
 };
 
@@ -26,7 +47,7 @@ const app = express();
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
-  graphiql: false,
+  graphiql: true,
 }));
 
 app.get('/tables', function (req, res) {
