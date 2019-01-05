@@ -3,6 +3,9 @@ const fetch = require('node-fetch');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
+const data = require('./data')
+
+console.log(111, data.tables)
 
 const SERVER_PORT = process.env.PORT || 4000;
 
