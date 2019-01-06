@@ -22,12 +22,17 @@ const joinGoalsAndAssists = (goals, assists) => {
     goalsAndAssists[player.name] = player.assists
   )
 
-  console.log(7676, goalsAndAssists)
+  const goalsAndAssistsAsObject = Object.keys(goalsAndAssists).map(key => {
+    return {
+      name: key,
+      goalsAndAssists: goalsAndAssists[key]
+    }
+  })
 
   return {
     goals: goalsRanking,
     assists: assistsRanking,
-    goalsAndAssists
+    goalsAndAssists: goalsAndAssistsAsObject
   }
 }
 
