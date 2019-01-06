@@ -1,25 +1,21 @@
 const fetch = require('node-fetch');
 const getStats = require('./util/espn_stats_parser')
 
-const URL = "http://www.espn.com/soccer/stats/_/league/ENG.1"
+const urls = [
+    "http://www.espn.com/soccer/stats/_/league/ENG.1",
+    "http://www.espn.com/soccer/stats/_/league/ita.1",
+]
 
 const loadStatsData = () => {
     console.log('loadStats called')
-    return fetch(URL)
-      .then(response => {
-        if (!response.ok){
-          const error_message = 'Error calling site'
-          console.error(error_message);
-          throw new Error(error_message)
-        }
-  
-        return response.text();
-      })
-      .then(data => {
-        const tables = getStats(data)
-        return tables
-      })
-      .catch(console.error);
+
+    const fetches = urls.map(url => fetch(url).then(resp => resp.text()))
+    console.log(47,  typeof(urls), typeof(fetches), urls, fetches)
+
+    return Promise.all(fetches).then(texts => {
+        console.log(48, typeof(texts), texts.length)
+        return getStats(texts[0])
+    })    
   }
   
 
