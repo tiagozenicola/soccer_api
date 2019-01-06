@@ -4,6 +4,9 @@ const getStats = require('./util/espn_stats_parser')
 const urls = [
     "http://www.espn.com/soccer/stats/_/league/ENG.1",
     "http://www.espn.com/soccer/stats/_/league/ita.1",
+    "http://www.espn.com/soccer/stats/_/league/esp.1",
+    "http://www.espn.com/soccer/stats/_/league/ger.1",
+    "http://www.espn.com/soccer/stats/_/league/fra.1",
 ]
 
 const loadStatsData = () => {
@@ -14,7 +17,13 @@ const loadStatsData = () => {
 
     return Promise.all(fetches).then(texts => {
         console.log(48, typeof(texts), texts.length)
-        return getStats(texts[0])
+        return {
+            "england": getStats(texts[0]),
+            "italy": getStats(texts[1]),
+            "spain": getStats(texts[2]),
+            "germany": getStats(texts[3]),
+            "france": getStats(texts[4])
+        }
     })    
   }
   
