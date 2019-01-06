@@ -4,16 +4,40 @@ const removeRankingColumn = (_, index) => {
   return index !== 0
 }
 
+const joinGoalsAndAssists = (goals, assists) => {
+  const goalsRanking = goals.map(row => getPlayer(row, "goals"))
+  const assistsRanking = assists.map(row => getPlayer(row, "assists"))
+
+  goalsAndAssists = []
+
+  goalsRanking.map(player => 
+    goalsAndAssists[player.name] ? 
+    goalsAndAssists[player.name] += player.goals : 
+    goalsAndAssists[player.name] = player.goals
+  )
+
+  assistsRanking.map(player => 
+    goalsAndAssists[player.name] ? 
+    goalsAndAssists[player.name] += player.assists : 
+    goalsAndAssists[player.name] = player.assists
+  )
+
+  console.log(7676, goalsAndAssists)
+
+  return {
+    goals: goalsRanking,
+    assists: assistsRanking,
+    goalsAndAssists
+  }
+}
+
 const getStats = data => {
   const html = HTMLParser.parse(data)
   const goalsAndAssists = html.querySelectorAll('tbody.Table2__tbody tr')
   const goals = goalsAndAssists.slice(0,50)
   const assists = goalsAndAssists.slice(50,100)
 
-  return {
-    goals: goals.map(row => getPlayer(row, "goals")),
-    assists: assists.map(row => getPlayer(row, "assists"))
-  }
+  return joinGoalsAndAssists(goals, assists)
 }
 
 const getPlayer = (row, field) => {
