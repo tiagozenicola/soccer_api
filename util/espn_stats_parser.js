@@ -27,6 +27,16 @@ const joinGoalsAndAssists = (goals, assists) => {
       name: key,
       goalsAndAssists: goalsAndAssists[key]
     }
+  }).sort((a,b)=>{
+    if (a.goalsAndAssists < b.goalsAndAssists){
+      return 1;
+    }
+
+    if (a.goalsAndAssists > b.goalsAndAssists){
+      return -1;
+    }
+
+    return 0;
   })
 
   return {
