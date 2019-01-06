@@ -1,5 +1,6 @@
 const cors = require('cors')
-const getTables = require('./util')
+const getTables = require('./util/table.js')
+const loadStatsData = require('./stats')
 const fetch = require('node-fetch');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
@@ -65,12 +66,19 @@ app.use(cors())
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
-  graphiql: false,
+  graphiql: true,
 }));
 
 
 app.get('/tables', (_req, res) => {
   loadSiteData().then(tables => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send(tables);
+  })
+});
+
+app.get('/tables/stats', (_req, res) => {
+  loadStatsData().then(tables => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.send(tables);
   })
