@@ -13,10 +13,8 @@ const loadStatsData = () => {
     console.log('loadStats called')
 
     const fetches = urls.map(url => fetch(url).then(resp => resp.text()))
-    console.log(47,  typeof(urls), typeof(fetches), urls, fetches)
 
     return Promise.all(fetches).then(texts => {
-        console.log(48, typeof(texts), texts.length)
         return {
             "england": getStats(texts[0]),
             "italy": getStats(texts[1]),

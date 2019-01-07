@@ -11,6 +11,7 @@ const SERVER_PORT = process.env.PORT || 4000;
 const schema = buildSchema(`
   type Query {
     tables: Tables!
+    stats: Stats!
   }
   type Tables {
     england: [Team!]
@@ -18,6 +19,26 @@ const schema = buildSchema(`
     italy: [Team!]
     germany: [Team!]
     france: [Team!]
+  }
+  type Stats {
+    england: SoccerStats!
+    spain: SoccerStats!
+    italy: SoccerStats!
+    germany: SoccerStats!
+    france: SoccerStats!
+  }
+  type SoccerStats {
+    assists: [PlayerStats!]
+    goals: [PlayerStats!]
+    goalsAndAssists: [PlayerStats!]
+  }
+  type PlayerStats {
+    name: String!
+    team: String
+    games_played: Int
+    assists: Int
+    goals: Int
+    goalsAndAssists: Int
   }
   type Team {
     position: Int!
@@ -39,6 +60,9 @@ const root = {
   tables: () => {
     return loadSiteData();
   },
+  stats: () => {
+    return loadStatsData();
+  }
 };
 
 const loadSiteData = () => {
