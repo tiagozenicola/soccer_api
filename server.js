@@ -10,22 +10,12 @@ const SERVER_PORT = process.env.PORT || 4000;
 
 const schema = buildSchema(`
   type Query {
-    tables: Tables!
-    stats: Stats!
+    championships: [Championship!]
   }
-  type Tables {
-    england: [Team!]
-    spain: [Team!]
-    italy: [Team!]
-    germany: [Team!]
-    france: [Team!]
-  }
-  type Stats {
-    england: SoccerStats!
-    spain: SoccerStats!
-    italy: SoccerStats!
-    germany: SoccerStats!
-    france: SoccerStats!
+  type Championship {
+    country: String!
+    teams: [Team!]
+    stats: SoccerStats!
   }
   type SoccerStats {
     assists: [PlayerStats!]
@@ -57,7 +47,7 @@ const schema = buildSchema(`
 `);
 
 const root = {
-  tables: () => {
+  championships: () => {
     return loadSiteData();
   },
   stats: () => {

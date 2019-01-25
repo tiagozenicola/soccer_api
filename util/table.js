@@ -11,13 +11,16 @@ const getTables = data => {
   const tables = html.querySelectorAll('table')
   const majorTables = Array.from(tables).slice(0, countries.length + 1).filter(removeWomenTable)
 
-  const mapTables = {}
+  championships = []
 
   majorTables.forEach((table, index) => {
-    mapTables[countries[index]] = getTeamsFromTable(table);
+    championships.push({
+      "country": countries[index],
+      "teams": getTeamsFromTable(table)
+    })
   })
 
-  return mapTables;
+  return championships;
 }
 
 const getTeamsFromTable = table => {
