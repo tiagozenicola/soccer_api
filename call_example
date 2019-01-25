@@ -1,0 +1,32 @@
+{
+  championships{
+    country,
+    teams{
+      ...teamFields
+    },
+    stats{
+      goals {
+        team
+        games_played
+        assists
+        goals
+        goalsAndAssists
+      }
+    }
+  }
+}
+
+fragment teamFields on Team {
+  position
+  name
+  games_played
+  win
+  drawn
+  lost
+  goals_for
+  goals_against
+  goal_difference
+  points
+  history
+  percent
+}
