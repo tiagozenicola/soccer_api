@@ -46,9 +46,18 @@ const schema = buildSchema(`
   }
 `);
 
+let lastCallTime = undefined;
+let lastCallValue = undefined;
+
 const root = {
   championships: () => {
-    return loadInfo();
+    
+    if (!lastCallTime || new Date() - lastCallTime > 10000){
+      lastCallTime = new Date();
+      lastCallValue = loadInfo();
+    }
+
+    return lastCallValue;
   }
 };
 
