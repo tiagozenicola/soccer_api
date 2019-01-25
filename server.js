@@ -56,11 +56,7 @@ const loadInfo = () => {
   return loadSiteData().then(championships => {
     
     return loadStatsData().then(stats => {
-      
-      championships['stats'] = stats;
-      
-      console.log(321, championships);
-      
+      championships.forEach(c => c.stats = stats[c.country] )
       return championships;
     })
 
