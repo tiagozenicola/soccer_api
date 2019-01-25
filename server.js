@@ -48,12 +48,26 @@ const schema = buildSchema(`
 
 const root = {
   championships: () => {
-    return loadSiteData();
-  },
-  stats: () => {
-    return loadStatsData();
+    return loadInfo();
   }
 };
+
+const loadInfo = () => {
+  return loadSiteData().then(championships => {
+    
+    return loadStatsData().then(stats => {
+      
+      championships['stats'] = stats;
+      
+      console.log(321, championships);
+      
+      return championships;
+    })
+
+
+  })
+  
+}
 
 const loadSiteData = () => {
   console.log('loadSiteData called')
