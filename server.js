@@ -52,7 +52,7 @@ let lastCallValue = undefined;
 const root = {
   championships: () => {
     
-    if (!lastCallTime || new Date() - lastCallTime > 10000){
+    if (!lastCallTime || new Date() - lastCallTime > 60000){
       lastCallTime = new Date();
       lastCallValue = loadInfo();
     }
