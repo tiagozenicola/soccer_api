@@ -1,5 +1,6 @@
 const cors = require('cors')
-const getTables = require('./util')
+const getTables = require('./util/table.js')
+const loadStatsData = require('./stats')
 const fetch = require('node-fetch');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
@@ -9,14 +10,25 @@ const SERVER_PORT = process.env.PORT || 4000;
 
 const schema = buildSchema(`
   type Query {
-    tables: Tables!
+    championships: [Championship!]
   }
-  type Tables {
-    england: [Team!]
-    spain: [Team!]
-    italy: [Team!]
-    germany: [Team!]
-    france: [Team!]
+  type Championship {
+    country: String!
+    teams: [Team!]
+    stats: SoccerStats!
+  }
+  type SoccerStats {
+    assists: [PlayerStats!]
+    goals: [PlayerStats!]
+    goalsAndAssists: [PlayerStats!]
+  }
+  type PlayerStats {
+    name: String!
+    team: String
+    games_played: Int
+    assists: Int
+    goals: Int
+    goalsAndAssists: Int
   }
   type Team {
     position: Int!
@@ -34,11 +46,33 @@ const schema = buildSchema(`
   }
 `);
 
+let lastCallTime = undefined;
+let lastCallValue = undefined;
+
 const root = {
-  tables: () => {
-    return loadSiteData();
-  },
+  championships: () => {
+    
+    if (!lastCallTime || new Date() - lastCallTime > 60000){
+      lastCallTime = new Date();
+      lastCallValue = loadInfo();
+    }
+
+    return lastCallValue;
+  }
 };
+
+const loadInfo = () => {
+  return loadSiteData().then(championships => {
+    
+    return loadStatsData().then(stats => {
+      championships.forEach(c => c.stats = stats[c.country] )
+      return championships;
+    })
+
+
+  })
+  
+}
 
 const loadSiteData = () => {
   console.log('loadSiteData called')
@@ -65,12 +99,19 @@ app.use(cors())
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
-  graphiql: false,
+  graphiql: true,
 }));
 
 
 app.get('/tables', (_req, res) => {
   loadSiteData().then(tables => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send(tables);
+  })
+});
+
+app.get('/tables/stats', (_req, res) => {
+  loadStatsData().then(tables => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.send(tables);
   })
