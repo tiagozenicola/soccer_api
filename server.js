@@ -18,9 +18,9 @@ const schema = buildSchema(`
     stats: SoccerStats!
   }
   type SoccerStats {
-    assists: [PlayerStats!]
-    goals: [PlayerStats!]
-    goalsAndAssists: [PlayerStats!]
+    assists(first: Int): [PlayerStats!]
+    goals(first: Int): [PlayerStats!]
+    goalsAndAssists(first: Int): [PlayerStats!]
   }
   type PlayerStats {
     name: String!
@@ -50,8 +50,8 @@ let lastCallTime = undefined;
 let lastCallValue = undefined;
 
 const root = {
-  championships: () => {
-    
+  championships: (args) => {
+    console.log(11, args)
     if (!lastCallTime || new Date() - lastCallTime > 60000){
       lastCallTime = new Date();
       lastCallValue = loadInfo();
