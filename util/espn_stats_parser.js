@@ -22,10 +22,11 @@ const joinGoalsAndAssists = (goals, assists, first) => {
     goalsAndAssists[player.name] = player.assists
   )
 
-  const goalsAndAssistsAsObject = Object.keys(goalsAndAssists).map(key => {
+  const goalsAndAssistsAsObject = Object.keys(goalsAndAssists).map(playerName => {
     return {
-      name: key,
-      goalsAndAssists: goalsAndAssists[key]
+      name: playerName,
+      goalsAndAssists: goalsAndAssists[playerName],
+      team: getTeamByName(playerName, goalsRanking, assistsRanking)
     }
   }).sort((a,b)=>{
     if (a.goalsAndAssists < b.goalsAndAssists){
@@ -44,6 +45,15 @@ const joinGoalsAndAssists = (goals, assists, first) => {
     assists: assistsRanking.slice(0,first),
     goalsAndAssists: goalsAndAssistsAsObject.slice(0,first)
   }
+}
+
+const getTeamByName = (playerName, goalsRanking, assistsRanking) => {
+  const player = goalsRanking.filter(player => player.name === playerName);
+  if (player.length > 0){
+    return player[0].team;
+  }
+
+  return assistsRanking.filter(player => player.name === playerName)[0].team;
 }
 
 const getStats = (data, first) => {
