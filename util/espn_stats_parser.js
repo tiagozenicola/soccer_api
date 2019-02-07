@@ -4,7 +4,7 @@ const removeRankingColumn = (_, index) => {
   return index !== 0
 }
 
-const joinGoalsAndAssists = (goals, assists) => {
+const joinGoalsAndAssists = (goals, assists, first) => {
   const goalsRanking = goals.map(row => getPlayer(row, "goals"))
   const assistsRanking = assists.map(row => getPlayer(row, "assists"))
 
@@ -22,10 +22,11 @@ const joinGoalsAndAssists = (goals, assists) => {
     goalsAndAssists[player.name] = player.assists
   )
 
-  const goalsAndAssistsAsObject = Object.keys(goalsAndAssists).map(key => {
+  const goalsAndAssistsAsObject = Object.keys(goalsAndAssists).map(playerName => {
     return {
-      name: key,
-      goalsAndAssists: goalsAndAssists[key]
+      name: playerName,
+      goalsAndAssists: goalsAndAssists[playerName],
+      team: getTeamByName(playerName, goalsRanking, assistsRanking)
     }
   }).sort((a,b)=>{
     if (a.goalsAndAssists < b.goalsAndAssists){
@@ -40,19 +41,28 @@ const joinGoalsAndAssists = (goals, assists) => {
   })
 
   return {
-    goals: goalsRanking,
-    assists: assistsRanking,
-    goalsAndAssists: goalsAndAssistsAsObject
+    goals: goalsRanking.slice(0,first),
+    assists: assistsRanking.slice(0,first),
+    goalsAndAssists: goalsAndAssistsAsObject.slice(0,first)
   }
 }
 
-const getStats = data => {
+const getTeamByName = (playerName, goalsRanking, assistsRanking) => {
+  const player = goalsRanking.filter(player => player.name === playerName);
+  if (player.length > 0){
+    return player[0].team;
+  }
+
+  return assistsRanking.filter(player => player.name === playerName)[0].team;
+}
+
+const getStats = (data, first) => {
   const html = HTMLParser.parse(data)
   const goalsAndAssists = html.querySelectorAll('tbody.Table2__tbody tr')
   const goals = goalsAndAssists.slice(0,50)
   const assists = goalsAndAssists.slice(50,100)
 
-  return joinGoalsAndAssists(goals, assists)
+  return joinGoalsAndAssists(goals, assists, first)
 }
 
 const getPlayer = (row, field) => {

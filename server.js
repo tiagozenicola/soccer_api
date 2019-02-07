@@ -4,74 +4,35 @@ const loadStatsData = require('./stats')
 const fetch = require('node-fetch');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const { buildSchema } = require('graphql');
+const schema = require('./schema');
 
 const SERVER_PORT = process.env.PORT || 4000;
-
-const schema = buildSchema(`
-  type Query {
-    championships: [Championship!]
-  }
-  type Championship {
-    country: String!
-    teams: [Team!]
-    stats: SoccerStats!
-  }
-  type SoccerStats {
-    assists: [PlayerStats!]
-    goals: [PlayerStats!]
-    goalsAndAssists: [PlayerStats!]
-  }
-  type PlayerStats {
-    name: String!
-    team: String
-    games_played: Int
-    assists: Int
-    goals: Int
-    goalsAndAssists: Int
-  }
-  type Team {
-    position: Int!
-    name: String!
-    games_played: Int!
-    win: Int!
-    drawn: Int!
-    lost: Int!
-    goals_for: Int!
-    goals_against: Int!
-    goal_difference: Int!
-    points: Int!
-    history: [Int!]
-    percent: Float!
-  }
-`);
 
 let lastCallTime = undefined;
 let lastCallValue = undefined;
 
 const root = {
-  championships: () => {
-    
+  championships: ({first}) => {
+    const firstParameter = first || 5;
+
     if (!lastCallTime || new Date() - lastCallTime > 60000){
       lastCallTime = new Date();
-      lastCallValue = loadInfo();
+      lastCallValue = loadInfo(firstParameter);
     }
 
     return lastCallValue;
   }
 };
 
-const loadInfo = () => {
-  return loadSiteData().then(championships => {
-    
-    return loadStatsData().then(stats => {
-      championships.forEach(c => c.stats = stats[c.country] )
-      return championships;
-    })
+const loadInfo = (first) => {
+  return Promise.all([loadSiteData(), loadStatsData(first)] ).then(results => {
+    const championships = results[0];
+    const stats = results[1];
 
+    championships.forEach(c => c.stats = stats[c.country] )
 
+    return championships;
   })
-  
 }
 
 const loadSiteData = () => {
