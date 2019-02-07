@@ -2,7 +2,7 @@ const { buildSchema } = require('graphql');
 
 const schema = buildSchema(`
   type Query {
-    championships: [Championship!]
+    championships(first: Int): [Championship!]
   }
   type Championship {
     country: String!
@@ -10,9 +10,9 @@ const schema = buildSchema(`
     stats: SoccerStats!
   }
   type SoccerStats {
-    assists(first: Int): [PlayerStats!]
-    goals(first: Int): [PlayerStats!]
-    goalsAndAssists(first: Int): [PlayerStats!]
+    assists: [PlayerStats!]
+    goals: [PlayerStats!]
+    goalsAndAssists: [PlayerStats!]
   }
   type PlayerStats {
     name: String!

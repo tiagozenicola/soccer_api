@@ -12,21 +12,22 @@ let lastCallTime = undefined;
 let lastCallValue = undefined;
 
 const root = {
-  championships: (args) => {
-    console.log(11, args)
+  championships: ({first}) => {
+    const firstParameter = first || 5;
+
     if (!lastCallTime || new Date() - lastCallTime > 60000){
       lastCallTime = new Date();
-      lastCallValue = loadInfo();
+      lastCallValue = loadInfo(firstParameter);
     }
 
     return lastCallValue;
   }
 };
 
-const loadInfo = () => {
+const loadInfo = (first) => {
   return loadSiteData().then(championships => {
     
-    return loadStatsData().then(stats => {
+    return loadStatsData(first).then(stats => {
       championships.forEach(c => c.stats = stats[c.country] )
       return championships;
     })
