@@ -25,16 +25,14 @@ const root = {
 };
 
 const loadInfo = (first) => {
-  return loadSiteData().then(championships => {
-    
-    return loadStatsData(first).then(stats => {
-      championships.forEach(c => c.stats = stats[c.country] )
-      return championships;
-    })
+  return Promise.all([loadSiteData(), loadStatsData(first)] ).then(results => {
+    const championships = results[0];
+    const stats = results[1];
 
+    championships.forEach(c => c.stats = stats[c.country] )
 
+    return championships;
   })
-  
 }
 
 const loadSiteData = () => {
