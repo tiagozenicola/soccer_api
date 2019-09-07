@@ -1,15 +1,11 @@
 const HTMLParser = require('node-html-parser');
 
-const countries = ['england', 'spain', 'italy', 'germany','france']
-
-const removeWomenTable = (_, index) => {
-  return index !== 1
-}
+const countries = ['england', 'germany', 'italy', 'spain', 'france']
 
 const getTables = data => {
   const html = HTMLParser.parse(data)
   const tables = html.querySelectorAll('table')
-  const majorTables = Array.from(tables).slice(0, countries.length + 1).filter(removeWomenTable)
+  const majorTables = Array.from(tables).slice(0, countries.length)
 
   championships = []
 
